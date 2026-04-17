@@ -1,0 +1,213 @@
+#!/bin/bash
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# gopacket installer
+# Builds all tools and installs them as gopacket-<toolname> on your PATH
+#
+
+set -e
+
+# Default install directory
+INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
+BUILD_DIR="./bin"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+usage() {
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  --prefix DIR    Install to DIR (default: /usr/local/bin)"
+    echo "  --build-only    Build but don't install"
+    echo "  --uninstall     Remove installed gopacket tools"
+    echo "  -h, --help      Show this help"
+    echo ""
+    echo "Environment:"
+    echo "  INSTALL_DIR     Same as --prefix (default: /usr/local/bin)"
+}
+
+build_only=false
+uninstall=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --prefix)
+            INSTALL_DIR="$2"
+            shift 2
+            ;;
+        --build-only)
+            build_only=true
+            shift
+            ;;
+        --uninstall)
+            uninstall=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+# Uninstall mode
+if $uninstall; then
+    echo "Removing gopacket tools from ${INSTALL_DIR}..."
+    count=0
+    for f in "${INSTALL_DIR}"/gopacket-*; do
+        if [ -f "$f" ]; then
+            echo "  removing $(basename "$f")"
+            rm -f "$f"
+            ((count++))
+        fi
+    done
+    if [ $count -eq 0 ]; then
+        echo "No gopacket tools found in ${INSTALL_DIR}"
+    else
+        echo -e "${GREEN}Removed ${count} tools${NC}"
+    fi
+    exit 0
+fi
+
+# Check dependencies
+if ! command -v go &>/dev/null; then
+    echo -e "${RED}Error: go is not installed or not in PATH${NC}"
+    echo "Install Go from https://go.dev/dl/"
+    exit 1
+fi
+
+if ! command -v gcc &>/dev/null; then
+    echo -e "${RED}Error: gcc is not installed${NC}"
+    echo "Install with: apt install build-essential (Debian/Ubuntu) or yum install gcc (RHEL/CentOS)"
+    exit 1
+fi
+
+# Check for libpcap headers (needed only by sniff and split tools)
+HAS_LIBPCAP=true
+if ! [ -f /usr/include/pcap.h ] \
+   && ! [ -f /usr/include/pcap/pcap.h ] \
+   && ! [ -f /usr/local/include/pcap.h ] \
+   && ! [ -f /opt/homebrew/include/pcap.h ] \
+   && ! pkg-config --exists libpcap 2>/dev/null; then
+    HAS_LIBPCAP=false
+    echo -e "${YELLOW}Warning: libpcap development headers not found${NC}"
+    echo "  The sniff and split tools will be skipped."
+    echo "  Install with: apt install libpcap-dev (Debian/Ubuntu/Kali)"
+    echo "             or yum install libpcap-devel (RHEL/CentOS)"
+    echo "             or brew install libpcap (macOS)"
+    echo ""
+fi
+
+# Determine script directory (where go.mod lives)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+if [ ! -f go.mod ]; then
+    echo -e "${RED}Error: go.mod not found. Run this script from the gopacket directory.${NC}"
+    exit 1
+fi
+
+# Discover tools
+tools=($(ls tools/))
+total=${#tools[@]}
+
+echo "gopacket installer"
+echo "  Tools:   ${total}"
+echo "  Build:   ${BUILD_DIR}/"
+if ! $build_only; then
+    echo "  Install: ${INSTALL_DIR}/"
+fi
+echo ""
+
+# Build
+echo "Building ${total} tools..."
+mkdir -p "${BUILD_DIR}"
+
+failed=0
+skipped=0
+for tool in "${tools[@]}"; do
+    if ! $HAS_LIBPCAP && { [ "$tool" = "sniff" ] || [ "$tool" = "split" ]; }; then
+        echo -e "  ${tool}... ${YELLOW}skipped (libpcap-dev not installed)${NC}"
+        skipped=$((skipped + 1))
+        continue
+    fi
+    echo -n "  ${tool}... "
+    if err=$(CGO_ENABLED=1 go build -o "${BUILD_DIR}/${tool}" \
+        -ldflags '-linkmode external -extldflags "-static-libgcc"' \
+        "./tools/${tool}" 2>&1); then
+        echo -e "${GREEN}ok${NC}"
+    else
+        echo -e "${RED}failed${NC}"
+        echo "$err" | sed 's/^/      /'
+        failed=$((failed + 1))
+    fi
+done
+
+if [ $failed -gt 0 ]; then
+    echo -e "\n${RED}${failed} tool(s) failed to build${NC}"
+    exit 1
+fi
+
+built=$((total - skipped))
+echo -e "\n${GREEN}Built ${built}/${total} tools successfully${NC}"
+if [ $skipped -gt 0 ]; then
+    echo -e "${YELLOW}Skipped ${skipped} tool(s) — install libpcap-dev to enable them${NC}"
+fi
+
+if $build_only; then
+    echo "Binaries are in ${BUILD_DIR}/"
+    exit 0
+fi
+
+# Install
+echo ""
+echo "Installing to ${INSTALL_DIR}/ as gopacket-<toolname>..."
+
+# Check write permissions
+if [ ! -w "${INSTALL_DIR}" ]; then
+    echo -e "${YELLOW}Note: ${INSTALL_DIR} requires elevated permissions${NC}"
+    echo "Re-running install step with sudo..."
+    SUDO="sudo"
+else
+    SUDO=""
+fi
+
+for tool in "${tools[@]}"; do
+    if [ ! -f "${BUILD_DIR}/${tool}" ]; then
+        continue
+    fi
+    # Normalize tool name: lowercase, replace special chars with hyphens
+    normalized=$(echo "$tool" | tr '[:upper:]' '[:lower:]' | tr '_' '-')
+    dest="${INSTALL_DIR}/gopacket-${normalized}"
+    $SUDO cp "${BUILD_DIR}/${tool}" "$dest"
+    $SUDO chmod +x "$dest"
+done
+
+echo -e "${GREEN}Installed ${built} tools to ${INSTALL_DIR}/${NC}"
+echo ""
+echo "Tools are available as:"
+echo "  gopacket-secretsdump, gopacket-smbclient, gopacket-psexec, etc."
+echo ""
+echo "Run 'gopacket-<tool> -h' for help on any tool."
+echo "To uninstall: $0 --uninstall"
