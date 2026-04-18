@@ -27,6 +27,15 @@ or `yum install gcc libpcap-devel` on RHEL/CentOS, or `brew install libpcap` on 
 The libpcap headers are only needed by the `sniff` and `split` tools - if
 libpcap is missing, `install.sh` will skip those two and build the rest.
 
+### Platform Support
+
+Linux and macOS only. Native Windows builds (MSYS2/MINGW64, plain `go build`
+on Windows) are **not supported** - `pkg/transport` uses libc's `connect()`
+via cgo so that `LD_PRELOAD`-based proxies like proxychains can hook it,
+which has no Windows equivalent. On Windows, use
+[WSL](https://learn.microsoft.com/windows/wsl/install) and build from inside
+the Linux environment.
+
 To uninstall:
 ```bash
 ./install.sh --uninstall
