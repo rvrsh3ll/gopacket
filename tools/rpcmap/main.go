@@ -90,8 +90,8 @@ type ifaceResult struct {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `gopacket v0.1.1-beta - Copyright 2026 Google LLC
-
+		fmt.Fprintln(os.Stderr, flags.Banner())
+		fmt.Fprintf(os.Stderr, `
 Scans for listening MSRPC interfaces. Tries the MGMT interface first,
 falls back to UUID bruteforce if MGMT is not available.
 
@@ -121,7 +121,7 @@ Examples:
 		os.Exit(1)
 	}
 
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(flags.Banner())
 	fmt.Println()
 
 	if *debug {

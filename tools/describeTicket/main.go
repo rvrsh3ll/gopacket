@@ -31,6 +31,7 @@ import (
 	"github.com/jcmturner/gokrb5/v8/messages"
 	"github.com/jcmturner/gokrb5/v8/types"
 
+	gopflags "github.com/mandiant/gopacket/pkg/flags"
 	"github.com/mandiant/gopacket/pkg/kerberos"
 )
 
@@ -966,7 +967,7 @@ func loadCCacheSafe(path string) (ccache *credentials.CCache, err error) {
 }
 
 func printUsage() {
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(gopflags.Banner())
 	fmt.Println()
 	fmt.Println("Parses a ccache ticket file and displays credential information.")
 	fmt.Println("With a decryption key, decrypts the ticket and shows the full PAC.")

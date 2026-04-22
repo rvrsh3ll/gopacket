@@ -24,6 +24,7 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 	"github.com/google/gopacket/pcapgo"
+	"github.com/mandiant/gopacket/pkg/flags"
 )
 
 // Supported datalink types
@@ -61,7 +62,7 @@ type ConnectionWriter struct {
 }
 
 func main() {
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(flags.Banner())
 	fmt.Println()
 	fmt.Println("[!] This tool is deprecated and may be removed in future versions.")
 	fmt.Println()

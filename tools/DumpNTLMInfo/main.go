@@ -76,7 +76,7 @@ const EPOCH_DIFF = 116444736000000000
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+		fmt.Fprintln(os.Stderr, flags.Banner())
 		fmt.Fprintln(os.Stderr)
 		fmt.Fprintln(os.Stderr, "Do NTLM authentication and parse information.")
 		fmt.Fprintln(os.Stderr)

@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/mandiant/gopacket/pkg/flags"
 	"github.com/mandiant/gopacket/pkg/ntfs"
 )
 
@@ -400,7 +401,7 @@ func cleanPath(path string) string {
 }
 
 func printUsage() {
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(flags.Banner())
 	fmt.Println()
 	fmt.Println("NTFS explorer (read-only)")
 	fmt.Println()
