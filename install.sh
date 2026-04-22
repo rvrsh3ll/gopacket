@@ -272,7 +272,20 @@ build_target() {
             continue
         fi
         echo -n "  ${tool}... "
-        local out_path="${outdir}/${tool}${exe_suffix}"
+        # Cross-compile outputs get the same gopacket- prefix as the native
+        # install, so users copying a .exe to a Windows host don't end up with
+        # ping.exe / net.exe / reg.exe shadowing built-ins of the same name.
+        # Native stays as the raw name here; install_native prefixes when it
+        # copies to INSTALL_DIR.
+        local out_name
+        if [ "$t" = "native" ]; then
+            out_name="$tool"
+        else
+            local normalized
+            normalized=$(echo "$tool" | tr '[:upper:]' '[:lower:]' | tr '_' '-')
+            out_name="gopacket-${normalized}"
+        fi
+        local out_path="${outdir}/${out_name}${exe_suffix}"
         local build_cmd=(go build -o "$out_path")
         if [ "$t" = "native" ]; then
             # Static-link libgcc so binaries run on minimally-versioned hosts.
