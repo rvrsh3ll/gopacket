@@ -10,22 +10,29 @@ A complete Go implementation of [Impacket](https://github.com/fortra/impacket) -
 git clone https://github.com/mandiant/gopacket
 cd gopacket
 
-# Build and install all tools as gopacket-<toolname> on your PATH
+# Default: Linux/macOS build + install to /usr/local/bin
 ./install.sh
 
-# Or just build without installing
+# Run with no flags and it prompts you through the choices interactively.
+# Or pick a target directly:
+./install.sh --target portable   # static Linux binaries in ./dist/portable/
+./install.sh --target windows    # Windows .exe cross-compiles in ./dist/windows/
+./install.sh --target all        # build every target in one run
+
+# Build without installing (native only)
 ./install.sh --build-only
 
 # Or build with make
 make build
 ```
 
-Requires Go 1.24.13+, GCC, and libpcap development headers
-(install with `apt install build-essential libpcap-dev` on Debian/Ubuntu/Kali,
-or `yum install gcc libpcap-devel` on RHEL/CentOS, or `brew install libpcap` on macOS).
-
-The libpcap headers are only needed by the `sniff` and `split` tools - if
-libpcap is missing, `install.sh` will skip those two and build the rest.
+The default (`--target native`) build needs Go 1.24.13+, GCC, and libpcap
+development headers (`apt install build-essential libpcap-dev` on
+Debian/Ubuntu/Kali, `yum install gcc libpcap-devel` on RHEL/CentOS, or
+`brew install libpcap` on macOS). The `portable` and `windows` targets only
+need the Go toolchain; `sniff` and `split` become stubs in those builds
+because they require libpcap. See [Platform Support](#platform-support) for
+the full matrix.
 
 ### Platform Support
 
