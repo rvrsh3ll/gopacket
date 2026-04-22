@@ -38,7 +38,7 @@ var protoMap = map[string]int{
 }
 
 func main() {
-	fmt.Println("gopacket v0.1.0-beta - Copyright 2026 Google LLC")
+	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
 	fmt.Println()
 
 	// Default protocols if none specified

@@ -59,7 +59,7 @@ var (
 )
 
 func printUsage() {
-	fmt.Fprintf(os.Stderr, `gopacket v0.1.0-beta - Copyright 2026 Google LLC
+	fmt.Fprintf(os.Stderr, `gopacket v0.1.1-beta - Copyright 2026 Google LLC
 
 usage: wmipersist [-h] [-debug] [-ts] [-com-version MAJOR_VERSION:MINOR_VERSION]
                   [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key]

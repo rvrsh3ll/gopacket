@@ -30,7 +30,7 @@ var (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `gopacket v0.1.0-beta - Copyright 2026 Google LLC
+		fmt.Fprintf(os.Stderr, `gopacket v0.1.1-beta - Copyright 2026 Google LLC
 
 SQL Server Browser Protocol discovery tool.
 
@@ -68,7 +68,7 @@ Note: Requires the SQL Server Browser service to be running on the target.
 		os.Exit(1)
 	}
 
-	fmt.Println("gopacket v0.1.0-beta - Copyright 2026 Google LLC")
+	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
 	fmt.Println()
 
 	target := flag.Arg(0)

@@ -170,7 +170,7 @@ func Parse() *Options {
 }
 
 // Version is the current gopacket release version.
-const Version = "v0.1.0-beta"
+const Version = "v0.1.1-beta"
 
 // Banner returns the standard gopacket banner string.
 func Banner() string {

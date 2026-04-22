@@ -32,7 +32,7 @@ const (
 
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Fprintf(os.Stderr, "gopacket v0.1.0-beta - Copyright 2026 Google LLC\n\n")
+		fmt.Fprintf(os.Stderr, "gopacket v0.1.1-beta - Copyright 2026 Google LLC\n\n")
 		fmt.Fprintf(os.Stderr, "Simple ICMP ping using raw sockets.\n\n")
 		fmt.Fprintf(os.Stderr, "Usage: %s <src ip> <dst ip>\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "\nNote: Requires root/CAP_NET_RAW privileges.\n")

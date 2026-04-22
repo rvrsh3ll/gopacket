@@ -400,7 +400,7 @@ func cleanPath(path string) string {
 }
 
 func printUsage() {
-	fmt.Println("gopacket v0.1.0-beta - Copyright 2026 Google LLC")
+	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
 	fmt.Println()
 	fmt.Println("NTFS explorer (read-only)")
 	fmt.Println()
