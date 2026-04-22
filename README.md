@@ -10,31 +10,45 @@ A complete Go implementation of [Impacket](https://github.com/fortra/impacket) -
 git clone https://github.com/mandiant/gopacket
 cd gopacket
 
-# Build and install all tools as gopacket-<toolname> on your PATH
+# Default: Linux/macOS build + install to /usr/local/bin
 ./install.sh
 
-# Or just build without installing
+# Run with no flags and it prompts you through the choices interactively.
+# Or pick a target directly:
+./install.sh --target portable   # static Linux binaries in ./dist/portable/
+./install.sh --target windows    # Windows .exe cross-compiles in ./dist/windows/
+./install.sh --target all        # build every target in one run
+
+# Build without installing (native only)
 ./install.sh --build-only
 
 # Or build with make
 make build
 ```
 
-Requires Go 1.24.13+, GCC, and libpcap development headers
-(install with `apt install build-essential libpcap-dev` on Debian/Ubuntu/Kali,
-or `yum install gcc libpcap-devel` on RHEL/CentOS, or `brew install libpcap` on macOS).
-
-The libpcap headers are only needed by the `sniff` and `split` tools - if
-libpcap is missing, `install.sh` will skip those two and build the rest.
+The default (`--target native`) build needs Go 1.24.13+, GCC, and libpcap
+development headers (`apt install build-essential libpcap-dev` on
+Debian/Ubuntu/Kali, `yum install gcc libpcap-devel` on RHEL/CentOS, or
+`brew install libpcap` on macOS). The `portable` and `windows` targets only
+need the Go toolchain; `sniff` and `split` become stubs in those builds
+because they require libpcap. See [Platform Support](#platform-support) for
+the full matrix.
 
 ### Platform Support
 
-Linux and macOS only. Native Windows builds (MSYS2/MINGW64, plain `go build`
-on Windows) are **not supported** - `pkg/transport` uses libc's `connect()`
-via cgo so that `LD_PRELOAD`-based proxies like proxychains can hook it,
-which has no Windows equivalent. On Windows, use
-[WSL](https://learn.microsoft.com/windows/wsl/install) and build from inside
-the Linux environment.
+gopacket builds on Linux, macOS, and Windows. The set of working tools and
+available proxying paths depends on the build flags:
+
+| Build                                  | Tools available                        | Proxying                                            |
+|----------------------------------------|----------------------------------------|-----------------------------------------------------|
+| Linux / macOS with cgo (default)       | All 63                                 | proxychains (LD_PRELOAD) and/or `-proxy` SOCKS5     |
+| Linux with `CGO_ENABLED=0`             | 61 (`sniff`, `split` become stubs)     | `-proxy` only (proxychains needs the libc hook)     |
+| Windows (`GOOS=windows CGO_ENABLED=0`) | 60 (`sniff`, `split`, `sniffer` stubs) | `-proxy` only (no `LD_PRELOAD` on Windows)          |
+
+`sniff` and `split` depend on libpcap via cgo; `sniffer` depends on Unix raw
+sockets. When a tool can't be built for the target, gopacket substitutes a
+stub that prints a clear message and exits 1, so `go build ./...` always
+succeeds and the install layout is consistent across platforms.
 
 To uninstall:
 ```bash
@@ -63,7 +77,7 @@ gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 'domain/user:password@targe
 ALL_PROXY=socks5h://127.0.0.1:1080 gopacket-smbclient 'domain/user:password@target'
 ```
 
-UDP-dependent features are **disabled** under `-proxy` rather than silently leaking packets (SOCKS5 UDP ASSOCIATE is rarely supported by proxies, and bypassing the proxy for UDP would reveal the attacker's real source IP). Affected features and their workarounds are documented in [KNOWN_ISSUES.md #9](KNOWN_ISSUES.md).
+UDP-dependent features are **disabled** under `-proxy` rather than silently leaking packets (SOCKS5 UDP ASSOCIATE is rarely supported by proxies, and bypassing the proxy for UDP would reveal the operator's real source IP). Affected features and their workarounds are documented in [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
 **Chaining:** `-proxy` is compatible with proxychains. The TCP connection to the SOCKS5 proxy itself still goes through libc `connect()`, so `proxychains → gopacket → -proxy → target` works for nested routing scenarios.
 
