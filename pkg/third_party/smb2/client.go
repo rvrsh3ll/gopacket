@@ -2061,6 +2061,27 @@ func (f *File) Transact(input []byte, maxOutput int) ([]byte, error) {
 	return f.ioctl(req)
 }
 
+// Ioctl sends an arbitrary FSCTL against the open file handle. Thin public
+// wrapper over the internal ioctl method, used for operations that don't have
+// a dedicated helper (e.g. FSCTL_SRV_ENUMERATE_SNAPSHOTS). The input slice may
+// be nil for control codes that take no payload.
+func (f *File) Ioctl(ctlCode uint32, input []byte, maxOutput int) ([]byte, error) {
+	f.m.Lock()
+	defer f.m.Unlock()
+
+	req := &IoctlRequest{
+		CtlCode:           ctlCode,
+		OutputOffset:      0,
+		OutputCount:       0,
+		MaxInputResponse:  0,
+		MaxOutputResponse: uint32(maxOutput),
+		Flags:             SMB2_0_IOCTL_IS_FSCTL,
+		Input:             RawBytes(input),
+	}
+
+	return f.ioctl(req)
+}
+
 func (f *File) readdir(pattern string) (fi []os.FileInfo, err error) {
 	req := &QueryDirectoryRequest{
 		FileInfoClass:      FileDirectoryInformation,
