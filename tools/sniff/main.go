@@ -41,7 +41,7 @@ var (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `gopacket v0.1.0-beta - Copyright 2026 Google LLC
+		fmt.Fprintf(os.Stderr, `gopacket v0.1.1-beta - Copyright 2026 Google LLC
 
 Simple packet sniffer using pcap.
 
@@ -63,7 +63,7 @@ Note: Requires root/CAP_NET_RAW privileges.
 
 	flag.Parse()
 
-	fmt.Println("gopacket v0.1.0-beta - Copyright 2026 Google LLC")
+	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
 	fmt.Println()
 
 	// List interfaces mode

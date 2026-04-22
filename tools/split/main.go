@@ -59,7 +59,7 @@ type ConnectionWriter struct {
 }
 
 func main() {
-	fmt.Println("gopacket v0.1.0-beta - Copyright 2026 Google LLC")
+	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
 	fmt.Println()
 	fmt.Println("[!] This tool is deprecated and may be removed in future versions.")
 	fmt.Println()

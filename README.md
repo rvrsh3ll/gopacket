@@ -41,7 +41,11 @@ To uninstall:
 ./install.sh --uninstall
 ```
 
-## Proxychains Support
+## Proxy Support
+
+gopacket supports two independent proxying paths. They can also be chained.
+
+### proxychains (LD_PRELOAD)
 
 All gopacket tools work through proxychains. Go binaries normally bypass proxychains because Go's runtime handles DNS and networking internally, skipping the `LD_PRELOAD` hooks that proxychains relies on. gopacket works around this by linking against the system C library for network operations, allowing proxychains to intercept connections normally.
 
@@ -49,6 +53,19 @@ All gopacket tools work through proxychains. Go binaries normally bypass proxych
 proxychains gopacket-secretsdump 'domain/user:password@target'
 proxychains gopacket-smbclient -k -no-pass 'domain/user@dc.domain.local'
 ```
+
+### Internal SOCKS5 proxy (`-proxy`)
+
+Every tool accepts `-proxy` to route outbound TCP through a SOCKS5 server without relying on `LD_PRELOAD`. Accepted schemes: `socks5` and `socks5h`. When `-proxy` is unset, the `ALL_PROXY` / `all_proxy` environment variables are consulted as a fallback.
+
+```bash
+gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 'domain/user:password@target'
+ALL_PROXY=socks5h://127.0.0.1:1080 gopacket-smbclient 'domain/user:password@target'
+```
+
+UDP-dependent features are **disabled** under `-proxy` rather than silently leaking packets (SOCKS5 UDP ASSOCIATE is rarely supported by proxies, and bypassing the proxy for UDP would reveal the attacker's real source IP). Affected features and their workarounds are documented in [KNOWN_ISSUES.md #9](KNOWN_ISSUES.md).
+
+**Chaining:** `-proxy` is compatible with proxychains. The TCP connection to the SOCKS5 proxy itself still goes through libc `connect()`, so `proxychains → gopacket → -proxy → target` works for nested routing scenarios.
 
 ## Documentation
 
@@ -196,6 +213,7 @@ KRB5CCNAME=ticket.ccache gopacket-secretsdump -k -no-pass 'domain/user@target'
 | `-dc-ip IP` | IP address of the domain controller |
 | `-target-ip IP` | IP address of the target (when using hostname for Kerberos) |
 | `-port PORT` | Target port (defaults vary by tool) |
+| `-proxy URL` | Route outbound TCP through a SOCKS5 proxy (e.g. `socks5h://127.0.0.1:1080`). UDP features are disabled. |
 | `-debug` | Enable debug output |
 
 ### Quick Examples
@@ -218,6 +236,9 @@ sudo gopacket-ntlmrelayx -t smb://target -socks
 
 # LDAP relay for RBCD
 sudo gopacket-ntlmrelayx -t ldaps://dc01.corp.local --delegate-access
+
+# Route all outbound traffic through a SOCKS5 proxy
+gopacket-secretsdump -proxy socks5h://127.0.0.1:1080 'corp.local/admin:pass@dc01.corp.local'
 ```
 
 ## Library
@@ -357,7 +378,7 @@ new tooling stays private. Open-sourcing gopacket narrows that gap.
 - Kerberos authentication requires a valid ccache file (TGT or service ticket)
 - For Kerberos, use the FQDN hostname - not an IP address
 - If `KRB5CCNAME` is not set, tools will look for `<username>.ccache` in the current directory
-- All tools work through proxychains
+- All tools support both proxychains and an internal `-proxy` SOCKS5 flag (see Proxy Support)
 - This project is for authorized security testing and research purposes only
 
 ## License

@@ -30,7 +30,7 @@ import (
 )
 
 func printUsage() {
-	fmt.Fprintf(os.Stderr, `gopacket v0.1.0-beta - Copyright 2026 Google LLC
+	fmt.Fprintf(os.Stderr, `gopacket v0.1.1-beta - Copyright 2026 Google LLC
 
 usage: rbcd [-h] [-delegate-to DELEGATE_TO] [-delegate-from DELEGATE_FROM]
             [-action {read,write,remove,flush}] [-use-ldaps] [-debug] [-ts]

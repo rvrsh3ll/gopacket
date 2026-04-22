@@ -102,7 +102,27 @@ When reporting, please include:
 
 ---
 
-## 8. Remaining Gaps (Low Priority)
+## 8. UDP Features Disabled Under `-proxy`
+
+**Symptom:** Tools that depend on UDP fail with `UDP disabled under -proxy; the underlying feature cannot be tunneled` when `-proxy` (or `ALL_PROXY`) is set.
+
+**Details:** SOCKS5 UDP ASSOCIATE is rarely implemented correctly by proxy servers and client libraries. Silently bypassing the proxy for UDP when `-proxy` is configured would leak the operator's real source IP. gopacket therefore refuses UDP when proxied and surfaces a clear error through `transport.ErrUDPUnderProxy`.
+
+**Affected features:**
+
+| Feature | Tool(s) | Workaround |
+|---------|---------|------------|
+| SQL Server Browser discovery (UDP 1434) | `mssqlinstance` | Specify the port directly with `-port 1433` on `mssqlclient`; skip auto-discovery |
+| DNS SRV lookup routed through the DC | `CheckLDAPStatus` | Pass `-dc-host <hostname>` to skip discovery |
+| DNS hostname resolution via the DC | `GetADComputers` | Pass the target as an IP, or `-dc-ip <ip>` |
+| Forest-FQDN DNS fallback | `raiseChild` | Pass `-parent-dc <ip>` explicitly |
+| Local source-IP discovery | `smbexec` | Set `-target-ip <ip>` manually |
+
+**Status:** By design. UDP tunneling over SOCKS5 is not a gopacket goal. If your workflow genuinely needs UDP over a proxy, use `proxychains` (which hooks libc at a lower level and can intercept UDP sockets) or a full VPN instead of `-proxy`.
+
+---
+
+## 9. Remaining Gaps (Low Priority)
 
 These Impacket features are not yet implemented due to infrastructure requirements:
 

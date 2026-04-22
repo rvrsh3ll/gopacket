@@ -123,7 +123,7 @@ func checkArch(machine string, timeoutSec int) {
 }
 
 func printUsage() {
-	fmt.Println("gopacket v0.1.0-beta - Copyright 2026 Google LLC")
+	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
 	fmt.Println()
 	fmt.Println("Gets the target system's OS architecture version")
 	fmt.Println()

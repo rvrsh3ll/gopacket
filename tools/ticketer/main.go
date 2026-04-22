@@ -446,7 +446,7 @@ func parseExtraSIDs() []string {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "gopacket v0.1.0-beta - Copyright 2026 Google LLC\n\n")
+	fmt.Fprintf(os.Stderr, "gopacket v0.1.1-beta - Copyright 2026 Google LLC\n\n")
 	fmt.Fprintf(os.Stderr, "Creates Kerberos golden/silver/sapphire tickets based on user options\n\n")
 	fmt.Fprintf(os.Stderr, "Usage: ticketer [options] <target>\n\n")
 	fmt.Fprintf(os.Stderr, "Positional:\n")
