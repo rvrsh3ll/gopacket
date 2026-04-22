@@ -21,9 +21,9 @@ import (
 	"log"
 	"sort"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/header"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/header"
 )
 
 // Endpoint Mapper UUID: e1af8308-5d1f-11c9-91a4-08002b14a0fa

@@ -19,10 +19,10 @@ import (
 	"fmt"
 	"log"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/winreg"
-	"gopacket/pkg/registry"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/winreg"
+	"github.com/mandiant/gopacket/pkg/registry"
 )
 
 // SAMDumpAttack dumps local SAM hashes via remote registry (Impacket default SMB attack).

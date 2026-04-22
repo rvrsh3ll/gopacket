@@ -21,7 +21,7 @@ import (
 	"log"
 	"net"
 
-	"gopacket/internal/build"
+	"github.com/mandiant/gopacket/internal/build"
 )
 
 // SMBRelayServer listens for incoming SMB2 connections from victims

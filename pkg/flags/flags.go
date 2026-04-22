@@ -21,9 +21,9 @@ import (
 	"sort"
 	"strings"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/session"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 // ExtraUsageLine is appended to the "Usage: tool [options] target" line (e.g. "[maxRid]")

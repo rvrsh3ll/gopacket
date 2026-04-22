@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"unicode/utf16"
 
-	"gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
 )
 
 // MS-SCMR (Service Control Manager Remote Protocol)

@@ -19,8 +19,8 @@ import (
 
 	"github.com/jcmturner/gokrb5/v8/gssapi"
 	"github.com/jcmturner/gokrb5/v8/types"
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/third_party/smb2"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/third_party/smb2"
 )
 
 // OID for Kerberos V5

@@ -19,8 +19,8 @@ import (
 	"encoding/binary"
 	"log"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
 )
 
 // RCMPublicClient wraps the RCMPublic interface (TermSrv_API_service pipe).

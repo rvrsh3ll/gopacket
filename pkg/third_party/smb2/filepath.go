@@ -39,7 +39,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	. "gopacket/pkg/third_party/smb2/internal/erref"
+	. "github.com/mandiant/gopacket/pkg/third_party/smb2/internal/erref"
 )
 
 // ErrBadPattern indicates a pattern was malformed.

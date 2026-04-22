@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	. "gopacket/pkg/third_party/smb2/internal/smb2"
+	. "github.com/mandiant/gopacket/pkg/third_party/smb2/internal/smb2"
 )
 
 type treeConn struct {

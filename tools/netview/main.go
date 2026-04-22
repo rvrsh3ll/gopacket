@@ -25,15 +25,15 @@ import (
 	"sync"
 	"time"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/samr"
-	"gopacket/pkg/dcerpc/srvsvc"
-	"gopacket/pkg/dcerpc/wkssvc"
-	"gopacket/pkg/flags"
-	"gopacket/pkg/session"
-	"gopacket/pkg/smb"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/samr"
+	"github.com/mandiant/gopacket/pkg/dcerpc/srvsvc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/wkssvc"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/smb"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 func main() {

@@ -33,7 +33,7 @@ import (
 	"golang.org/x/crypto/md4"
 	"golang.org/x/text/encoding/unicode"
 
-	"gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/flags"
 )
 
 var (

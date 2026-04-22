@@ -21,7 +21,7 @@ import (
 	"log"
 	"net"
 
-	"gopacket/internal/build"
+	"github.com/mandiant/gopacket/internal/build"
 )
 
 // RAWRelayServer listens for incoming raw TCP connections and captures

@@ -13,10 +13,10 @@ import (
 	"sync"
 	"time"
 
-	. "gopacket/pkg/third_party/smb2/internal/erref"
-	. "gopacket/pkg/third_party/smb2/internal/smb2"
+	. "github.com/mandiant/gopacket/pkg/third_party/smb2/internal/erref"
+	. "github.com/mandiant/gopacket/pkg/third_party/smb2/internal/smb2"
 
-	"gopacket/pkg/third_party/smb2/internal/msrpc"
+	"github.com/mandiant/gopacket/pkg/third_party/smb2/internal/msrpc"
 )
 
 // Dialer contains options for func (*Dialer) Dial.

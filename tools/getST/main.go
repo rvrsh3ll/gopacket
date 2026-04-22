@@ -21,9 +21,9 @@ import (
 	"os"
 	"strings"
 
-	"gopacket/pkg/flags"
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/session"
 )
 
 var (

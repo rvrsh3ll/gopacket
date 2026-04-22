@@ -22,7 +22,7 @@ import (
 	"log"
 	"net"
 
-	"gopacket/internal/build"
+	"github.com/mandiant/gopacket/internal/build"
 )
 
 // DCE/RPC packet type constants

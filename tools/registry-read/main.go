@@ -23,7 +23,7 @@ import (
 	"strings"
 	"unicode/utf16"
 
-	"gopacket/pkg/registry"
+	"github.com/mandiant/gopacket/pkg/registry"
 )
 
 const (

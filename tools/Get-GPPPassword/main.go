@@ -27,10 +27,10 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/flags"
-	"gopacket/pkg/session"
-	"gopacket/pkg/smb"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/smb"
 )
 
 // Microsoft's published AES key for GPP password decryption

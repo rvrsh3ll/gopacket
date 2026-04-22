@@ -1,6 +1,6 @@
 package smb2
 
-import "gopacket/pkg/third_party/smb2/internal/utf16le"
+import "github.com/mandiant/gopacket/pkg/third_party/smb2/internal/utf16le"
 
 // ----------------------------------------------------------------------------
 // SMB2 Error Response

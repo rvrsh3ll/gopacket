@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"strings"
 
-	"gopacket/internal/build"
+	"github.com/mandiant/gopacket/internal/build"
 )
 
 // WinRMExecAttack implements AttackModule for WinRM command execution.

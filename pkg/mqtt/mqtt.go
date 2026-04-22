@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"net"
 
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 // Packet types

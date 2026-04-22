@@ -23,7 +23,7 @@ import (
 	"errors"
 	"strings"
 
-	"gopacket/pkg/utf16le"
+	"github.com/mandiant/gopacket/pkg/utf16le"
 )
 
 // NTLM v2 server

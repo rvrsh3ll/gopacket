@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"unicode/utf16"
 
-	"gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
 )
 
 var UUID = [16]byte{

@@ -16,7 +16,7 @@
 package wmi
 
 import (
-	"gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
 )
 
 // WMI UUIDs

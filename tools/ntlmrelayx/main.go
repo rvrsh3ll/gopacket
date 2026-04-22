@@ -21,8 +21,8 @@ import (
 	"os"
 	"strings"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/relay"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/relay"
 )
 
 func main() {

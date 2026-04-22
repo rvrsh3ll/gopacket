@@ -21,9 +21,9 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/epmapper"
-	"gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/epmapper"
+	"github.com/mandiant/gopacket/pkg/session"
 )
 
 // GKDI Interface UUID: B9785960-524F-11DF-8B6D-83DCDED72085

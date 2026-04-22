@@ -21,8 +21,8 @@ import (
 	"errors"
 	"log"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/utf16le"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/utf16le"
 )
 
 type Session struct {

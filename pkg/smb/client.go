@@ -26,11 +26,11 @@ import (
 	"sort"
 	"strings"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/session"
-	"gopacket/pkg/third_party/smb2"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/third_party/smb2"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 type Client struct {

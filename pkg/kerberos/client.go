@@ -31,8 +31,8 @@ import (
 	"github.com/jcmturner/gokrb5/v8/keytab"
 	"github.com/jcmturner/gokrb5/v8/messages"
 	"github.com/jcmturner/gokrb5/v8/types"
-	"gopacket/internal/build"
-	"gopacket/pkg/session"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/session"
 )
 
 // OID for Kerberos V5 (GSSAPI)

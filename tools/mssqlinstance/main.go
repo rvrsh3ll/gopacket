@@ -20,8 +20,8 @@ import (
 	"os"
 	"time"
 
-	"gopacket/pkg/flags"
-	"gopacket/pkg/tds"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/tds"
 )
 
 var (
