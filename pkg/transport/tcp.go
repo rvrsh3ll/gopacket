@@ -14,116 +14,44 @@
 
 package transport
 
-/*
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-
-// libc_dial connects via libc's getaddrinfo + connect, which ARE hookable by LD_PRELOAD.
-// Returns the file descriptor on success, or -1 (getaddrinfo fail) / -2 (connect fail) on error.
-int libc_dial(const char *host, const char *port, int timeout_sec) {
-    struct addrinfo hints, *res, *p;
-    int sockfd;
-
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-
-    int rv = getaddrinfo(host, port, &hints, &res);
-    if (rv != 0) {
-        return -1;
-    }
-
-    for (p = res; p != NULL; p = p->ai_next) {
-        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-        if (sockfd == -1) continue;
-
-        // Set connect timeout via SO_SNDTIMEO (Linux honors this for connect())
-        if (timeout_sec > 0) {
-            struct timeval tv;
-            tv.tv_sec = timeout_sec;
-            tv.tv_usec = 0;
-            setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-        }
-
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-            close(sockfd);
-            continue;
-        }
-        break;
-    }
-
-    freeaddrinfo(res);
-
-    if (p == NULL) return -2;
-
-    // Clear the send timeout so it doesn't affect subsequent writes
-    if (timeout_sec > 0) {
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-    }
-
-    return sockfd;
-}
-*/
-import "C"
-
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"net"
-	"os"
 	"strings"
-	"unsafe"
+	"time"
 )
 
 // DefaultTimeout is the default connect timeout in seconds.
 const DefaultTimeout = 30
 
-// Dial connects to the address on the named network using libc's connect(),
-// which is hookable by LD_PRELOAD-based proxies like proxychains.
-// The address must be in "host:port" format.
+// Dial opens a TCP connection. Routes through the configured proxy if one was
+// set via Configure; otherwise uses the platform's direct dialer (libc
+// connect() on Unix/cgo, net.Dialer elsewhere).
 func Dial(network, address string) (net.Conn, error) {
 	return DialTimeout(network, address, DefaultTimeout)
 }
 
-// DialTimeout connects using libc's connect() with the given timeout in seconds.
+// DialTimeout is Dial with an explicit connect timeout in seconds.
+// A non-positive timeoutSec is normalized to DefaultTimeout so the direct and
+// proxy branches behave consistently.
 func DialTimeout(network, address string, timeoutSec int) (net.Conn, error) {
-	host, port, err := splitHostPort(address)
-	if err != nil {
-		return nil, err
+	if timeoutSec <= 0 {
+		timeoutSec = DefaultTimeout
 	}
-
-	cHost := C.CString(host)
-	cPort := C.CString(port)
-	defer C.free(unsafe.Pointer(cHost))
-	defer C.free(unsafe.Pointer(cPort))
-
-	fd := C.libc_dial(cHost, cPort, C.int(timeoutSec))
-	if fd == -1 {
-		return nil, fmt.Errorf("getaddrinfo failed for %s", address)
+	if h := proxyHolder.Load(); h != nil {
+		if strings.HasPrefix(network, "udp") {
+			return nil, ErrUDPUnderProxy
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
+		defer cancel()
+		return h.cd.DialContext(ctx, network, address)
 	}
-	if fd == -2 {
-		return nil, fmt.Errorf("connect failed for %s", address)
-	}
-
-	// Convert C file descriptor to Go net.Conn
-	f := os.NewFile(uintptr(fd), fmt.Sprintf("tcp:%s", address))
-	conn, err := net.FileConn(f)
-	f.Close() // FileConn dups the fd, so close the original
-	if err != nil {
-		return nil, fmt.Errorf("FileConn failed: %w", err)
-	}
-	return conn, nil
+	return directDial(network, address, timeoutSec)
 }
 
-// DialTLS connects via libc then wraps the connection in TLS.
+// DialTLS opens a TCP connection (via proxy if configured) and wraps it in TLS.
 func DialTLS(network, address string, config *tls.Config) (*tls.Conn, error) {
 	rawConn, err := Dial(network, address)
 	if err != nil {
@@ -142,24 +70,20 @@ func DialTLS(network, address string, config *tls.Config) (*tls.Conn, error) {
 	return tlsConn, nil
 }
 
-// Dialer provides a way to establish connections via libc.
+// Dialer is a value-typed dialer suitable for APIs that expect a struct with a
+// Dial method (e.g. pkg/smb, pkg/ldap). Respects the configured proxy.
 type Dialer struct {
 	TimeoutSec int
 }
 
-// Dial establishes a TCP connection to the specified address using libc's connect().
+// Dial establishes a TCP connection to address. Routes through the proxy if configured.
 func (d *Dialer) Dial(network, address string) (net.Conn, error) {
-	timeout := d.TimeoutSec
-	if timeout == 0 {
-		timeout = DefaultTimeout
-	}
-	return DialTimeout(network, address, timeout)
+	return DialTimeout(network, address, d.TimeoutSec)
 }
 
 func splitHostPort(address string) (host, port string, err error) {
 	host, port, err = net.SplitHostPort(address)
 	if err != nil {
-		// Try treating the whole thing as a host (no port)
 		if !strings.Contains(address, ":") {
 			return address, "", fmt.Errorf("missing port in address: %s", address)
 		}
