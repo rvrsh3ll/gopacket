@@ -20,6 +20,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/mandiant/gopacket/pkg/flags"
 	"golang.org/x/net/icmp"
 	"golang.org/x/net/ipv6"
 )
@@ -30,7 +31,7 @@ const (
 )
 
 func main() {
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(flags.Banner())
 	fmt.Println()
 
 	if len(os.Args) < 3 {

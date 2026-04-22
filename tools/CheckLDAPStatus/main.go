@@ -39,7 +39,7 @@ var (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+		fmt.Fprintln(os.Stderr, flags.Banner())
 		fmt.Fprintln(os.Stderr)
 		fmt.Fprintln(os.Stderr, "LDAP signing and channel binding enumeration utility.")
 		fmt.Fprintln(os.Stderr)

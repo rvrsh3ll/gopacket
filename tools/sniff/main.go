@@ -28,6 +28,7 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
+	"github.com/mandiant/gopacket/pkg/flags"
 )
 
 // Supported datalink types
@@ -43,8 +44,8 @@ var (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `gopacket v0.1.1-beta - Copyright 2026 Google LLC
-
+		fmt.Fprintln(os.Stderr, flags.Banner())
+		fmt.Fprintf(os.Stderr, `
 Simple packet sniffer using pcap.
 
 Usage: %s [options] [BPF filter]
@@ -65,7 +66,7 @@ Note: Requires root/CAP_NET_RAW privileges.
 
 	flag.Parse()
 
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(flags.Banner())
 	fmt.Println()
 
 	// List interfaces mode

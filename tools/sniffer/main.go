@@ -25,6 +25,7 @@ import (
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
+	"github.com/mandiant/gopacket/pkg/flags"
 )
 
 // Protocol name to number mapping
@@ -40,7 +41,7 @@ var protoMap = map[string]int{
 }
 
 func main() {
-	fmt.Println("gopacket v0.1.1-beta - Copyright 2026 Google LLC")
+	fmt.Println(flags.Banner())
 	fmt.Println()
 
 	// Default protocols if none specified
