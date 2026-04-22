@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net"
 	"os"
 	"strings"
 	"time"
@@ -33,6 +32,7 @@ import (
 	"gopacket/pkg/ldap"
 	"gopacket/pkg/session"
 	"gopacket/pkg/smb"
+	"gopacket/pkg/transport"
 
 	goldap "github.com/go-ldap/ldap/v3"
 	krbclient "github.com/jcmturner/gokrb5/v8/client"
@@ -616,7 +616,7 @@ func doKpasswd(opts *flags.Options, target session.Target, targetUsername, targe
 // sendKpasswd sends a kpasswd request to the KDC on TCP port 464 and returns the response.
 func sendKpasswd(kdc string, data []byte) ([]byte, error) {
 	addr := fmt.Sprintf("%s:464", kdc)
-	conn, err := net.DialTimeout("tcp", addr, 10*time.Second)
+	conn, err := transport.DialTimeout("tcp", addr, 10)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to kpasswd %s: %v", addr, err)
 	}

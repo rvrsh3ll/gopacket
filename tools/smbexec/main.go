@@ -36,6 +36,7 @@ import (
 	"gopacket/pkg/flags"
 	"gopacket/pkg/session"
 	"gopacket/pkg/smb"
+	"gopacket/pkg/transport"
 )
 
 var (
@@ -446,8 +447,15 @@ func (e *SMBExec) finish() {
 	}
 }
 
-// getLocalIP determines the local IP address used to reach the target host
+// getLocalIP determines the local IP address used to reach the target host.
+// Under -proxy the concept doesn't apply (traffic flows via the proxy, not
+// directly from this host), so we return "" and let the caller fall back.
+// The UDP socket here doesn't actually send packets — it just asks the kernel
+// which source address would be picked for a hypothetical connection.
 func getLocalIP(targetHost string) string {
+	if transport.IsProxyConfigured() {
+		return ""
+	}
 	conn, err := net.Dial("udp", targetHost+":445")
 	if err != nil {
 		return ""

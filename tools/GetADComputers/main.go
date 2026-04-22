@@ -28,6 +28,7 @@ import (
 	"gopacket/pkg/flags"
 	"gopacket/pkg/ldap"
 	"gopacket/pkg/session"
+	"gopacket/pkg/transport"
 )
 
 var (
@@ -161,12 +162,12 @@ func resolveHostname(hostname, dnsServer string) string {
 		return ""
 	}
 
-	// Use custom resolver to query the DC's DNS
+	// Custom resolver using the DC's DNS. Under -proxy, UDP DNS cannot be
+	// tunneled via SOCKS5; callers should pass an IP directly in that case.
 	resolver := &net.Resolver{
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
-			d := net.Dialer{Timeout: 2 * time.Second}
-			return d.DialContext(ctx, "udp", dnsServer+":53")
+			return transport.DialContext(ctx, network, dnsServer+":53")
 		},
 	}
 
