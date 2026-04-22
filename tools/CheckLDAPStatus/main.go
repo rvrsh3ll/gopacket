@@ -52,9 +52,11 @@ func main() {
 	// Standard flags
 	debug := flag.Bool("debug", false, "Turn DEBUG output ON")
 	ts := flag.Bool("ts", false, "Adds timestamp to every logging output")
+	configureProxy := flags.RegisterProxyFlag()
 
 	flags.CheckHelp()
 	flag.Parse()
+	configureProxy()
 
 	// Validate required flags
 	if *dcHost == "" && (*dcIP == "" || *domain == "") {
@@ -120,12 +122,13 @@ func (c *LDAPChecker) Run() error {
 }
 
 func (c *LDAPChecker) listDCs() ([]string, error) {
-	// Create custom resolver using the DC as DNS server
+	// Custom resolver using the DC as DNS server. Under -proxy the resolver's
+	// UDP attempt will fail at the SOCKS5 layer; supply -dc-host directly to
+	// skip this lookup when proxied.
 	resolver := &net.Resolver{
 		PreferGo: true,
 		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
-			d := net.Dialer{Timeout: c.timeout}
-			return d.DialContext(ctx, "udp", net.JoinHostPort(c.dcIP, "53"))
+			return transport.DialContext(ctx, network, net.JoinHostPort(c.dcIP, "53"))
 		},
 	}
 

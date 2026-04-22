@@ -27,6 +27,7 @@ import (
 	"gopacket/internal/build"
 	"gopacket/pkg/dcerpc"
 	"gopacket/pkg/dcerpc/epmapper"
+	"gopacket/pkg/flags"
 	"gopacket/pkg/transport"
 )
 
@@ -111,7 +112,9 @@ Examples:
 `, os.Args[0], os.Args[0], os.Args[0])
 	}
 
+	configureProxy := flags.RegisterProxyFlag()
 	flag.Parse()
+	configureProxy()
 
 	if flag.NArg() < 1 {
 		flag.Usage()

@@ -88,9 +88,11 @@ func main() {
 
 	debug := flag.Bool("debug", false, "Turn DEBUG output ON")
 	ts := flag.Bool("ts", false, "Adds timestamp to every logging output")
+	configureProxy := flags.RegisterProxyFlag()
 
 	flags.CheckHelp()
 	flag.Parse()
+	configureProxy()
 
 	if flag.NArg() < 1 {
 		flag.Usage()
