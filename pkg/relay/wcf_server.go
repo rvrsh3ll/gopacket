@@ -21,7 +21,7 @@ import (
 	"log"
 	"net"
 
-	"gopacket/internal/build"
+	"github.com/mandiant/gopacket/internal/build"
 )
 
 // WCFRelayServer listens for incoming WCF/ADWS (port 9389) connections and

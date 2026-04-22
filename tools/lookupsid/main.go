@@ -20,11 +20,11 @@ import (
 	"os"
 	"strconv"
 
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/lsarpc"
-	"gopacket/pkg/flags"
-	"gopacket/pkg/session"
-	"gopacket/pkg/smb"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/lsarpc"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/smb"
 )
 
 var (

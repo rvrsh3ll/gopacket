@@ -5,9 +5,9 @@ import (
 	"crypto/aes"
 	"encoding/hex"
 
-	"gopacket/pkg/third_party/smb2/internal/crypto/cmac"
+	"github.com/mandiant/gopacket/pkg/third_party/smb2/internal/crypto/cmac"
 
-	. "gopacket/pkg/third_party/smb2/internal/smb2"
+	. "github.com/mandiant/gopacket/pkg/third_party/smb2/internal/smb2"
 
 	"testing"
 )

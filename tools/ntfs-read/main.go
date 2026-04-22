@@ -24,7 +24,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"gopacket/pkg/ntfs"
+	"github.com/mandiant/gopacket/pkg/ntfs"
 )
 
 func main() {

@@ -27,11 +27,11 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/ntlm"
-	"gopacket/pkg/session"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/ntlm"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 // AUTH types

@@ -21,8 +21,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/kerberos"
 )
 
 var (

@@ -22,10 +22,10 @@ import (
 	"log"
 	"strings"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/session"
-	"gopacket/pkg/smb"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/smb"
 )
 
 // RemoteOps handles remote registry operations

@@ -28,16 +28,16 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/drsuapi"
-	"gopacket/pkg/dcerpc/epmapper"
-	"gopacket/pkg/dcerpc/svcctl"
-	"gopacket/pkg/dcerpc/winreg"
-	"gopacket/pkg/ese"
-	"gopacket/pkg/flags"
-	"gopacket/pkg/registry"
-	"gopacket/pkg/session"
-	"gopacket/pkg/smb"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/drsuapi"
+	"github.com/mandiant/gopacket/pkg/dcerpc/epmapper"
+	"github.com/mandiant/gopacket/pkg/dcerpc/svcctl"
+	"github.com/mandiant/gopacket/pkg/dcerpc/winreg"
+	"github.com/mandiant/gopacket/pkg/ese"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/registry"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/smb"
 )
 
 var (

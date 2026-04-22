@@ -23,7 +23,7 @@ import (
 
 	"testing"
 
-	"gopacket/pkg/utf16le"
+	"github.com/mandiant/gopacket/pkg/utf16le"
 )
 
 func TestNtowfv2(t *testing.T) {

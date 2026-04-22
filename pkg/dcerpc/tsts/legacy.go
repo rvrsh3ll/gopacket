@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"log"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
 )
 
 // LegacyClient wraps the LegacyAPI interface (Ctx_WinStation_API_service pipe).

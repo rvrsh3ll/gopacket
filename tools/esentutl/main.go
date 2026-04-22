@@ -23,8 +23,8 @@ import (
 	"sort"
 	"strings"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/ese"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/ese"
 )
 
 var (

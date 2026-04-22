@@ -25,7 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/pkg/utf16le"
+	"github.com/mandiant/gopacket/pkg/utf16le"
 
 	"golang.org/x/crypto/md4"
 )

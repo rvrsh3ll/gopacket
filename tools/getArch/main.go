@@ -22,10 +22,10 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/dcerpc/epmapper"
-	"gopacket/pkg/dcerpc/header"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/dcerpc/epmapper"
+	"github.com/mandiant/gopacket/pkg/dcerpc/header"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 var (

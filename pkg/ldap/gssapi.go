@@ -24,7 +24,7 @@ import (
 	"github.com/jcmturner/gokrb5/v8/gssapi"
 	"github.com/jcmturner/gokrb5/v8/iana/keyusage"
 	"github.com/jcmturner/gokrb5/v8/types"
-	"gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/kerberos"
 )
 
 var debugGSSAPI = os.Getenv("DEBUG_GSSAPI") != ""

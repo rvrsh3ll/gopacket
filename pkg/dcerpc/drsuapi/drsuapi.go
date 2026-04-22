@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"log"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc"
-	"gopacket/pkg/utf16le"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc"
+	"github.com/mandiant/gopacket/pkg/utf16le"
 )
 
 // DRSUAPI UUID: e3514235-4b06-11d1-ab04-00c04fc2dcd2

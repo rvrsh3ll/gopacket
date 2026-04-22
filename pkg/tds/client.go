@@ -25,10 +25,10 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/ntlm"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/ntlm"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 // Client represents a TDS/MSSQL client

@@ -52,10 +52,10 @@ import (
 	"github.com/oiweiwei/go-msrpc/msrpc/erref/hresult"
 	_ "github.com/oiweiwei/go-msrpc/msrpc/erref/win32"
 
-	"gopacket/pkg/flags"
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/session"
-	"gopacket/pkg/smb"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/smb"
 )
 
 // IDispatch invoke flags

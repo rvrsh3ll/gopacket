@@ -28,7 +28,7 @@ import (
 	"net/http"
 	"time"
 
-	"gopacket/internal/build"
+	"github.com/mandiant/gopacket/internal/build"
 )
 
 // HTTPSRelayServer wraps HTTPRelayServer with TLS.

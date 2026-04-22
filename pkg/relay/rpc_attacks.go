@@ -29,9 +29,9 @@ import (
 	"sync"
 	"time"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/dcerpc/icpr"
-	"gopacket/pkg/dcerpc/tsch"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/dcerpc/icpr"
+	"github.com/mandiant/gopacket/pkg/dcerpc/tsch"
 
 	"software.sslmate.com/src/go-pkcs12"
 )

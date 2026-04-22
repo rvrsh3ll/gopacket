@@ -22,9 +22,9 @@ import (
 	"strconv"
 	"time"
 
-	"gopacket/pkg/flags"
-	"gopacket/pkg/ldap"
-	"gopacket/pkg/session"
+	"github.com/mandiant/gopacket/pkg/flags"
+	"github.com/mandiant/gopacket/pkg/ldap"
+	"github.com/mandiant/gopacket/pkg/session"
 )
 
 var (

@@ -26,9 +26,9 @@ import (
 	ber "github.com/go-asn1-ber/asn1-ber"
 	goldap "github.com/go-ldap/ldap/v3"
 
-	"gopacket/internal/build"
-	gopacketldap "gopacket/pkg/ldap"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	gopacketldap "github.com/mandiant/gopacket/pkg/ldap"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 // SICILY NTLM bind context tags (Microsoft LDAP extension)

@@ -22,8 +22,8 @@ import (
 	"os"
 	"strings"
 
-	"gopacket/pkg/kerberos"
-	"gopacket/pkg/registry"
+	"github.com/mandiant/gopacket/pkg/kerberos"
+	"github.com/mandiant/gopacket/pkg/registry"
 )
 
 func main() {

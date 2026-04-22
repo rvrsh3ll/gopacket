@@ -27,8 +27,8 @@ import (
 	"strings"
 	"time"
 
-	"gopacket/internal/build"
-	"gopacket/pkg/transport"
+	"github.com/mandiant/gopacket/internal/build"
+	"github.com/mandiant/gopacket/pkg/transport"
 )
 
 // HTTPRelayClient implements ProtocolClient for relaying NTLM auth to HTTP/HTTPS targets.

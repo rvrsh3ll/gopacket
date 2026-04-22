@@ -3,7 +3,7 @@
 package smb2
 
 import (
-	"gopacket/pkg/third_party/smb2/internal/utf16le"
+	"github.com/mandiant/gopacket/pkg/third_party/smb2/internal/utf16le"
 )
 
 const (
