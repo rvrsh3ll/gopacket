@@ -26,19 +26,7 @@ When reporting, please include:
 
 ---
 
-## 2. Standalone secretsdump: Panic in Cached Credentials Parser
-
-**Symptom:** `panic: runtime error: slice bounds out of range [5052:5048]` in `pkg/registry/hive.go:82` when parsing the SECURITY hive's cached domain logon entries.
-
-**Details:** SAM hashes and LSA secrets dump correctly, but parsing `NL$` cached credential entries causes an out-of-bounds slice access in the registry hive cell reader. Occurs after successfully dumping several cached entries.
-
-**Workaround:** SAM hashes and LSA secrets are dumped before the panic occurs, so those results are usable. The panic only affects cached domain logon credentials.
-
-**Status:** Bug in `pkg/registry/hive.go` `readCell()` — needs bounds checking fix.
-
----
-
-## 3. tschexec / enum-local-admins: RPC Access Denied
+## 2. tschexec / enum-local-admins: RPC Access Denied
 
 **Symptom:** `RPC Fault 0x05 (ACCESS_DENIED)` when running `tschexec` or `enumlocaladmins` via relay.
 
@@ -52,7 +40,7 @@ When reporting, please include:
 
 ---
 
-## 4. SMB Relay: Intermittent PIPE_NOT_AVAILABLE (0xc00000ac)
+## 3. SMB Relay: Intermittent PIPE_NOT_AVAILABLE (0xc00000ac)
 
 **Symptom:** `create failed: status=0xc00000ac` when opening the `winreg` named pipe on the relay target.
 
@@ -64,7 +52,7 @@ When reporting, please include:
 
 ---
 
-## 5. Shadow Credentials: Certificate Generation Not Implemented
+## 4. Shadow Credentials: Certificate Generation Not Implemented
 
 **Symptom:** `-attack shadowcreds` reads existing `msDS-KeyCredentialLink` values but cannot write new shadow credentials.
 
@@ -76,7 +64,7 @@ When reporting, please include:
 
 ---
 
-## 6. LDAP Relay: Plain LDAP (Port 389) Post-Auth Signing Failure
+## 5. LDAP Relay: Plain LDAP (Port 389) Post-Auth Signing Failure
 
 **Symptom:** LDAP relay to port 389 authenticates successfully but subsequent LDAP operations fail with signing errors on patched DCs.
 
@@ -88,7 +76,7 @@ When reporting, please include:
 
 ---
 
-## 7. SMB→LDAPS Relay Fails on Patched DCs
+## 6. SMB→LDAPS Relay Fails on Patched DCs
 
 **Symptom:** Relay from SMB capture to LDAPS target fails with MIC validation errors.
 
@@ -102,7 +90,7 @@ When reporting, please include:
 
 ---
 
-## 8. UDP Features Disabled Under `-proxy`
+## 7. UDP Features Disabled Under `-proxy`
 
 **Symptom:** Tools that depend on UDP fail with `UDP disabled under -proxy; the underlying feature cannot be tunneled` when `-proxy` (or `ALL_PROXY`) is set.
 
@@ -122,7 +110,7 @@ When reporting, please include:
 
 ---
 
-## 9. Remaining Gaps (Low Priority)
+## 8. Remaining Gaps (Low Priority)
 
 These Impacket features are not yet implemented due to infrastructure requirements:
 
