@@ -75,20 +75,26 @@ func (h *Hive) cellOffset(offset int32) int {
 	return int(offset) + 4096
 }
 
-// readCell reads a cell at the given offset and returns its data
+// readCell reads a cell at the given offset and returns its data (the bytes
+// after the 4-byte cell header). A valid allocated cell has a negative size
+// field; a positive size marks a free cell, and zero is malformed.
 func (h *Hive) readCell(offset int32) ([]byte, error) {
 	pos := h.cellOffset(offset)
 	if pos < 4096 || pos >= len(h.data)-4 {
 		return nil, fmt.Errorf("invalid cell offset: %d", offset)
 	}
 
-	// Cell size is first 4 bytes (negative = allocated, positive = free)
-	size := int32(binary.LittleEndian.Uint32(h.data[pos : pos+4]))
-	if size > 0 {
-		return nil, fmt.Errorf("cell is free at offset %d", offset)
+	rawSize := int32(binary.LittleEndian.Uint32(h.data[pos : pos+4]))
+	if rawSize >= 0 {
+		// Positive = free cell, zero = malformed. Either way, no data to read.
+		return nil, fmt.Errorf("cell at offset %d is free or zero-sized (raw size %d)", offset, rawSize)
 	}
-	size = -size
-
+	size := -rawSize
+	if size < 4 {
+		// Minimum cell is the 4-byte header; anything smaller would produce
+		// an inverted slice (panic in the original code).
+		return nil, fmt.Errorf("cell at offset %d has invalid size %d (min 4)", offset, size)
+	}
 	if pos+int(size) > len(h.data) {
 		return nil, fmt.Errorf("cell extends beyond hive: %d + %d > %d", pos, size, len(h.data))
 	}
