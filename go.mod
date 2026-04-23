@@ -22,7 +22,7 @@ require (
 )
 
 require (
-	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 // indirect
+	github.com/Azure/go-ntlmssp v0.1.1 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/indece-official/go-ebcdic v1.2.0 // indirect
 	github.com/jcmturner/aescts/v2 v2.0.0 // indirect
