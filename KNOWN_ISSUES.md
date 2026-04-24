@@ -10,19 +10,17 @@ When reporting, please include:
 
 ---
 
-## 1. SMB Relay: Registry Access Denied (samdump / secretsdump)
+## 1. SMB Relay samdump / secretsdump: Relayed Principal Must Have Admin on Target
 
-**Symptom:** `BaseRegOpenKey(SYSTEM\Select) failed: 0x00000005` (ACCESS_DENIED) when running `samdump` or `secretsdump` via SMB relay.
+**Symptom:** `BaseRegOpenKey(SYSTEM\Select) failed: 0x00000005` (ACCESS_DENIED) after a relay appears to succeed.
 
-**Details:** The relay authenticates successfully, the winreg named pipe opens, and the HKLM root handle is obtained — but opening `SYSTEM\Select` (needed for boot key extraction) returns ACCESS_DENIED. This affects both `samdump` (new default) and `secretsdump`.
+**Root cause:** The relayed principal does not have local administrator rights on the target. Reading the SAM/SYSTEM/SECURITY hives requires admin access, so the attack fails at the first privileged registry open. Verified against GOAD with `WINTERFELL$` (DC machine account) relayed to srv02 (fails as described), then `eddard.stark` (Domain Admin) relayed to the same srv02 (dumps hashes successfully).
 
-**Root cause (suspected):** The relayed SMB session token may have a restricted impersonation level ("Identification" instead of "Impersonation") depending on the target's configuration, Windows patch level, or the relayed account's privileges. The winreg service may enforce stricter access checks on subkeys than on the root HKLM handle.
+**This is not a gopacket bug** — it is the same constraint Impacket's `ntlmrelayx -attack samdump` has. The access mask on the subkey open has been aligned with Impacket (`MAXIMUM_ALLOWED`) so we pick up the widest effective access the token allows, but a token with no admin rights still can't read the protected keys no matter what we request.
 
-**Workaround:** Use direct (non-relay) secretsdump with credentials obtained through other means (e.g., relay to LDAP for credential extraction, then use `secretsdump` directly).
+**Common pitfall:** PetitPotam, PrinterBug, and similar coercion tools force a HOST's machine account to authenticate. A domain controller's machine account does NOT have admin on member servers by default, so relaying a DC$ auth to a member server always produces this ACCESS_DENIED. Relay scenarios that succeed involve user-context auth from a principal who is actually a local or domain admin on the target (e.g., a scheduled task running as a Domain Admin, an interactive login reaching out over SMB, Responder-style LLMNR poisoning catching a user credential).
 
-**Not affected:** Standalone `secretsdump` with direct credentials works perfectly. Other SMB relay attacks (`shares`, `smbexec`) work fine over the same relay session.
-
-**Status:** Needs investigation. May be environment-specific. Compare with Impacket's ntlmrelayx default SMB attack on the same target.
+**Workaround:** ensure the relayed principal has admin rights on the target, or use `-attack shares` / `-attack smbexec` which don't require registry access.
 
 ---
 
@@ -40,19 +38,7 @@ When reporting, please include:
 
 ---
 
-## 3. SMB Relay: Intermittent PIPE_NOT_AVAILABLE (0xc00000ac)
-
-**Symptom:** `create failed: status=0xc00000ac` when opening the `winreg` named pipe on the relay target.
-
-**Details:** The Remote Registry service may not be running or may be slow to respond to pipe connection requests. This is transient — retrying (via `--keep-relaying`) typically succeeds.
-
-**Workaround:** Ensure the Remote Registry service is running on the target before relaying. Or use `--keep-relaying` to automatically retry on the next coerced authentication.
-
-**Status:** Consider adding auto-retry or service start logic (Impacket starts RemoteRegistry automatically via SVCCTL before winreg operations).
-
----
-
-## 4. Shadow Credentials: Certificate Generation Not Implemented
+## 3. Shadow Credentials: Certificate Generation Not Implemented
 
 **Symptom:** `-attack shadowcreds` reads existing `msDS-KeyCredentialLink` values but cannot write new shadow credentials.
 
@@ -64,7 +50,7 @@ When reporting, please include:
 
 ---
 
-## 5. LDAP Relay: Plain LDAP (Port 389) Post-Auth Signing Failure
+## 4. LDAP Relay: Plain LDAP (Port 389) Post-Auth Signing Failure
 
 **Symptom:** LDAP relay to port 389 authenticates successfully but subsequent LDAP operations fail with signing errors on patched DCs.
 
@@ -76,7 +62,7 @@ When reporting, please include:
 
 ---
 
-## 6. SMB→LDAPS Relay Fails on Patched DCs
+## 5. SMB→LDAPS Relay Fails on Patched DCs
 
 **Symptom:** Relay from SMB capture to LDAPS target fails with MIC validation errors.
 
@@ -90,7 +76,7 @@ When reporting, please include:
 
 ---
 
-## 7. UDP Features Disabled Under `-proxy`
+## 6. UDP Features Disabled Under `-proxy`
 
 **Symptom:** Tools that depend on UDP fail with `UDP disabled under -proxy; the underlying feature cannot be tunneled` when `-proxy` (or `ALL_PROXY`) is set.
 
@@ -110,7 +96,7 @@ When reporting, please include:
 
 ---
 
-## 8. Remaining Gaps (Low Priority)
+## 7. Remaining Gaps (Low Priority)
 
 These Impacket features are not yet implemented due to infrastructure requirements:
 
