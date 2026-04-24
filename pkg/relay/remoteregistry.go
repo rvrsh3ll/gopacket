@@ -94,8 +94,18 @@ func ensureRemoteRegistryStarted(client *SMBRelayClient) *remoteRegistryState {
 // it) and re-applies the SERVICE_DISABLED start type (if it was disabled
 // before we enabled it). Errors are logged but not returned; we're on the
 // cleanup path after the real work has completed.
+//
+// The caller's tree state may have moved off IPC$ (e.g., the attack switched
+// to ADMIN$ to download a saved hive), so we re-TreeConnect to IPC$ before
+// opening svcctl. That makes this function safe to invoke from any defer
+// position without coupling it to the attack's tree management.
 func restoreRemoteRegistryState(client *SMBRelayClient, state *remoteRegistryState) {
 	if state == nil || (!state.startedByUs && !state.wasDisabled) {
+		return
+	}
+
+	if err := client.TreeConnect("IPC$"); err != nil {
+		log.Printf("[-] Warning: could not re-tree-connect to IPC$ for RemoteRegistry restore: %v", err)
 		return
 	}
 
